@@ -4,7 +4,8 @@ const REQUEST_METHOD = Object.freeze({
   GET: 'GET',
   POST: 'POST',
   DELETE: 'DELETE',
-  PATH: 'PATH'
+  PATH: 'PATH',
+  OPTIONS: 'OPTIONS'
 })
 
 const requestListener = (request, response) => {
@@ -22,6 +23,9 @@ const requestListener = (request, response) => {
       status: 'success',
       data: []
     }))
+    response.end()
+  } else if (request.method === REQUEST_METHOD.OPTIONS) {
+    response.writeHead(200, headers)
     response.end()
   } else {
     response.writeHead(404, headers)
