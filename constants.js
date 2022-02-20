@@ -9,7 +9,7 @@ const REQUEST_METHOD = Object.freeze({
   GET: 'GET',
   POST: 'POST',
   DELETE: 'DELETE',
-  PATH: 'PATH',
+  PATCH: 'PATCH',
   OPTIONS: 'OPTIONS'
 })
 
