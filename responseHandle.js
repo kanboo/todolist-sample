@@ -9,6 +9,16 @@ const errorHandle = (response, statusCode, message) => {
   response.end()
 }
 
+const successHandle = (response, todos) => {
+  response.writeHead(200, HEADERS)
+  response.write(JSON.stringify({
+    status: 'success',
+    data: todos
+  }))
+  response.end()
+}
+
 module.exports = {
-  errorHandle
+  errorHandle,
+  successHandle
 }

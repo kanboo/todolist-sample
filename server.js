@@ -2,7 +2,7 @@ const http = require('http')
 const { v4: uuidV4 } = require('uuid')
 
 const { HEADERS, REQUEST_METHOD } = require('./constants')
-const { errorHandle } = require('./errorHandle')
+const { errorHandle, successHandle } = require('./responseHandle')
 
 let todos = []
 
@@ -14,12 +14,7 @@ const requestListener = (request, response) => {
   })
 
   if (request.url === '/todos' && request.method === REQUEST_METHOD.GET) {
-    response.writeHead(200, HEADERS)
-    response.write(JSON.stringify({
-      status: 'success',
-      data: todos
-    }))
-    response.end()
+    successHandle(response, todos)
   } else if (request.url === '/todos' && request.method === REQUEST_METHOD.POST) {
     request.on('end', () => {
       try {
@@ -32,12 +27,7 @@ const requestListener = (request, response) => {
             id: uuidV4()
           })
 
-          response.writeHead(200, HEADERS)
-          response.write(JSON.stringify({
-            status: 'success',
-            data: todos
-          }))
-          response.end()
+          successHandle(response, todos)
         } else {
           errorHandle(response, 400, '資料不齊全')
         }
@@ -49,12 +39,7 @@ const requestListener = (request, response) => {
   } else if (request.url === '/todos' && request.method === REQUEST_METHOD.DELETE) {
     todos = []
 
-    response.writeHead(200, HEADERS)
-    response.write(JSON.stringify({
-      status: 'success',
-      data: todos
-    }))
-    response.end()
+    successHandle(response, todos)
   } else if (request.url.startsWith('/todos/') && request.method === REQUEST_METHOD.DELETE) {
     const id = request.url?.split('/')?.pop() ?? undefined
     const index = todos.findIndex(todo => todo.id === id)
@@ -62,12 +47,7 @@ const requestListener = (request, response) => {
     if (index !== -1) {
       todos.splice(index, 1)
 
-      response.writeHead(200, HEADERS)
-      response.write(JSON.stringify({
-        status: 'success',
-        data: todos
-      }))
-      response.end()
+      successHandle(response, todos)
     } else {
       errorHandle(response, 400, `查無此ID：${id}，刪除失敗。`)
     }
@@ -82,13 +62,7 @@ const requestListener = (request, response) => {
         if (title && index !== -1) {
           todos[index].title = title
 
-          response.writeHead(200, HEADERS)
-          response.write(JSON.stringify({
-            status: 'success',
-            data: todos
-          }))
-          response.end()
-
+          successHandle(response, todos)
         } else {
           errorHandle(response, 400, '查無此ID 或 資料不齊全！')
         }
