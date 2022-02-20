@@ -1,0 +1,129 @@
+{
+	"info": {
+		"_postman_id": "9a00fa7f-e4d1-47c2-9bdb-2f44c7e16694",
+		"name": "TodoList - Heroku",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "取得所有待辦事項",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://arcane-wave-36832.herokuapp.com/todos",
+					"protocol": "https",
+					"host": [
+						"arcane-wave-36832",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"todos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "刪除所有待辦事項",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://arcane-wave-36832.herokuapp.com/todos",
+					"protocol": "https",
+					"host": [
+						"arcane-wave-36832",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"todos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "刪除單筆待辦事項",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://arcane-wave-36832.herokuapp.com/todos/648468b8-6392-441b-9c26-0a28436e5ef6",
+					"protocol": "https",
+					"host": [
+						"arcane-wave-36832",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"todos",
+						"648468b8-6392-441b-9c26-0a28436e5ef6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "新增待辦事項",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"今天有聚餐4\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://arcane-wave-36832.herokuapp.com/todos",
+					"protocol": "https",
+					"host": [
+						"arcane-wave-36832",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"todos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "更新待辦事項",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"今天有聚餐4444\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://arcane-wave-36832.herokuapp.com/todos/86f41d30-bf2d-48df-acac-9a5aa4cec3e5",
+					"protocol": "https",
+					"host": [
+						"arcane-wave-36832",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"todos",
+						"86f41d30-bf2d-48df-acac-9a5aa4cec3e5"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
