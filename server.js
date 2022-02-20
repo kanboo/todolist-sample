@@ -45,6 +45,16 @@ const requestListener = (request, response) => {
         errorHandle(response, 400, '建立失敗')
       }
     })
+
+  } else if (request.url === '/todos' && request.method === REQUEST_METHOD.DELETE) {
+    todos = []
+    
+    response.writeHead(200, HEADERS)
+    response.write(JSON.stringify({
+      status: 'success',
+      data: todos
+    }))
+    response.end()
   } else if (request.method === REQUEST_METHOD.OPTIONS) {
     response.writeHead(200, HEADERS)
     response.end()
