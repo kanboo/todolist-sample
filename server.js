@@ -1,4 +1,6 @@
 const http = require('http')
+const { v4: uuidV4 } = require('uuid')
+let todos = []
 
 const REQUEST_METHOD = Object.freeze({
   GET: 'GET',
@@ -17,13 +19,40 @@ const requestListener = (request, response) => {
     'Content-Type': 'application/json'
   }
 
-  if (request.url === '/' && request.method === REQUEST_METHOD.GET) {
+  let body = ''
+  request.on('data',chunk=>{
+    body += chunk
+  })
+
+  if (request.url === '/todos' && request.method === REQUEST_METHOD.GET) {
     response.writeHead(200, headers)
     response.write(JSON.stringify({
       status: 'success',
-      data: []
+      data: todos
     }))
     response.end()
+  } else if (request.url === '/todos' && request.method === REQUEST_METHOD.POST) {
+    request.on('end',()=>{
+      const params = JSON.parse(body)
+
+      const title = params?.title ?? undefined
+
+      if(title){
+        todos.push({
+          title,
+          uuid: uuidV4()
+        })
+  
+        response.writeHead(200, headers)
+        response.write(JSON.stringify({
+          status: 'success',
+          data: todos
+        }))
+        response.end()
+      }
+    })
+
+   
   } else if (request.method === REQUEST_METHOD.OPTIONS) {
     response.writeHead(200, headers)
     response.end()
