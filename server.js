@@ -1,23 +1,12 @@
 const http = require('http')
 const { v4: uuidV4 } = require('uuid')
+
+const { HEADERS, REQUEST_METHOD } = require('./constants')
+const { errorHandle } = require('./errorHandle')
+
 let todos = []
 
-const REQUEST_METHOD = Object.freeze({
-  GET: 'GET',
-  POST: 'POST',
-  DELETE: 'DELETE',
-  PATH: 'PATH',
-  OPTIONS: 'OPTIONS'
-})
-
 const requestListener = (request, response) => {
-
-  const headers = {
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization, Content-Length, X-Requested-With',
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'PATCH, POST, GET,OPTIONS,DELETE',
-    'Content-Type': 'application/json'
-  }
 
   let body = ''
   request.on('data', chunk => {
@@ -25,7 +14,7 @@ const requestListener = (request, response) => {
   })
 
   if (request.url === '/todos' && request.method === REQUEST_METHOD.GET) {
-    response.writeHead(200, headers)
+    response.writeHead(200, HEADERS)
     response.write(JSON.stringify({
       status: 'success',
       data: todos
@@ -43,41 +32,24 @@ const requestListener = (request, response) => {
             uuid: uuidV4()
           })
 
-          response.writeHead(200, headers)
+          response.writeHead(200, HEADERS)
           response.write(JSON.stringify({
             status: 'success',
             data: todos
           }))
           response.end()
         } else {
-          response.writeHead(400, headers)
-          response.write(JSON.stringify({
-            status: 'false',
-            message: '資料不齊全'
-          }))
-          response.end()
+          errorHandle(response, 400, '資料不齊全')
         }
       } catch {
-        response.writeHead(400, headers)
-        response.write(JSON.stringify({
-          status: 'false',
-          message: '建立失敗'
-        }))
-        response.end()
+        errorHandle(response, 400, '建立失敗')
       }
     })
-
-
   } else if (request.method === REQUEST_METHOD.OPTIONS) {
-    response.writeHead(200, headers)
+    response.writeHead(200, HEADERS)
     response.end()
   } else {
-    response.writeHead(404, headers)
-    response.write(JSON.stringify({
-      status: 'false',
-      message: 'Not found'
-    }))
-    response.end()
+    errorHandle(response, 404, 'Not found')
   }
 }
 
