@@ -29,7 +29,7 @@ const requestListener = (request, response) => {
         if (title) {
           todos.push({
             title,
-            uuid: uuidV4()
+            id: uuidV4()
           })
 
           response.writeHead(200, HEADERS)
@@ -48,13 +48,29 @@ const requestListener = (request, response) => {
 
   } else if (request.url === '/todos' && request.method === REQUEST_METHOD.DELETE) {
     todos = []
-    
+
     response.writeHead(200, HEADERS)
     response.write(JSON.stringify({
       status: 'success',
       data: todos
     }))
     response.end()
+  } else if (request.url.startsWith('/todos/') && request.method === REQUEST_METHOD.DELETE) {
+    const id = request.url?.split('/')?.pop() ?? undefined
+    const index = todos.findIndex(todo => todo.id === id)
+
+    if (index !== -1) {
+      todos.splice(index,1)
+
+      response.writeHead(200, HEADERS)
+      response.write(JSON.stringify({
+        status: 'success',
+        data: todos
+      }))
+      response.end()
+    } else {
+      errorHandle(response, 400, `查無此ID：${id}，刪除失敗。`)
+    }
   } else if (request.method === REQUEST_METHOD.OPTIONS) {
     response.writeHead(200, HEADERS)
     response.end()
