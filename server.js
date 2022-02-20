@@ -20,7 +20,7 @@ const requestListener = (request, response) => {
   }
 
   let body = ''
-  request.on('data',chunk=>{
+  request.on('data', chunk => {
     body += chunk
   })
 
@@ -32,27 +32,42 @@ const requestListener = (request, response) => {
     }))
     response.end()
   } else if (request.url === '/todos' && request.method === REQUEST_METHOD.POST) {
-    request.on('end',()=>{
-      const params = JSON.parse(body)
+    request.on('end', () => {
+      try {
+        const params = JSON.parse(body)
+        const title = params?.title ?? undefined
 
-      const title = params?.title ?? undefined
+        if (title) {
+          todos.push({
+            title,
+            uuid: uuidV4()
+          })
 
-      if(title){
-        todos.push({
-          title,
-          uuid: uuidV4()
-        })
-  
-        response.writeHead(200, headers)
+          response.writeHead(200, headers)
+          response.write(JSON.stringify({
+            status: 'success',
+            data: todos
+          }))
+          response.end()
+        } else {
+          response.writeHead(400, headers)
+          response.write(JSON.stringify({
+            status: 'false',
+            message: '資料不齊全'
+          }))
+          response.end()
+        }
+      } catch {
+        response.writeHead(400, headers)
         response.write(JSON.stringify({
-          status: 'success',
-          data: todos
+          status: 'false',
+          message: '建立失敗'
         }))
         response.end()
       }
     })
 
-   
+
   } else if (request.method === REQUEST_METHOD.OPTIONS) {
     response.writeHead(200, headers)
     response.end()
